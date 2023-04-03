@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:my_couter_cubit/counter/counter_cubit.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,21 +12,15 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
+    return BlocProvider<CounterCubit>(
+      create: (context) => CounterCubit(),
+      child: MaterialApp(
+        title: 'Flutter MyCounter Cubit',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: const MyHomePage(),
       ),
-      home: const MyHomePage(),
     );
   }
 }
@@ -37,10 +33,10 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: const Center(
+      body: Center(
         child: Text(
-          '0',
-          style: TextStyle(
+          '${BlocProvider.of<CounterCubit>(context).state.counter}',
+          style: const TextStyle(
             fontSize: 52.0,
           ),
         ),
@@ -49,7 +45,7 @@ class MyHomePage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           FloatingActionButton(
-            onPressed: () => null,
+            onPressed: () => BlocProvider.of<CounterCubit>(context).increment(),
             heroTag: 'increment',
             child: const Icon(Icons.add),
           ),
@@ -57,7 +53,7 @@ class MyHomePage extends StatelessWidget {
             width: 10.0,
           ),
           FloatingActionButton(
-            onPressed: () => null,
+            onPressed: () => BlocProvider.of<CounterCubit>(context).decrement(),
             heroTag: 'decrement',
             child: const Icon(Icons.remove),
           ),
